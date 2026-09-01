@@ -58,9 +58,13 @@
         async function loadRides() {
             if (ridesLoaded) return;
             ridesLoaded = true;
+            // full ride tracks (decoded polylines) for the heat layer
+            fetch('/static/data/ride_tracks.json').then(r => r.json()).then(tracks => {
+                const pts = tracks.map(p => [p[0], p[1], 0.35]);
+                L.heatLayer(pts, { radius: 10, blur: 8, maxZoom: 14 }).addTo(ridesHeat);
+            });
+            // ride start points for the clickable dots layer
             const rides = await (await fetch('/static/data/rides.json')).json();
-            const pts = rides.map(r => [r.lat, r.lng, 0.6]);
-            L.heatLayer(pts, { radius: 18, blur: 14, maxZoom: 13 }).addTo(ridesHeat);
             for (const r of rides) {
                 L.circleMarker([r.lat, r.lng], { radius: 3, weight: 0, fillColor: '#e67e22', fillOpacity: 0.7 })
                     .bindPopup(`<b>${r.n}</b><br>${r.d}`).addTo(ridesDots);
