@@ -202,7 +202,7 @@ LOCATIONS = {
     },
 
     'bend': {
-        'name': 'Bend',
+        'name': 'Bend, OR',
         'lat': 44.0430,
         'lon': -121.3730,
         'elevation': '3900 ft',
