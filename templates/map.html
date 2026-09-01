@@ -52,23 +52,20 @@
             { opacity: 0.6, attribution: 'Radar: Iowa State Mesonet' });
 
         // ---------- my rides (loaded lazily) ----------
-        const ridesDots = L.layerGroup();
+        const ridesLines = L.layerGroup();
         const ridesHeat = L.layerGroup();
         let ridesLoaded = false;
         async function loadRides() {
             if (ridesLoaded) return;
             ridesLoaded = true;
-            // full ride tracks (decoded polylines) for the heat layer
-            fetch('/static/data/ride_tracks.json').then(r => r.json()).then(tracks => {
-                const pts = tracks.map(p => [p[0], p[1], 0.35]);
-                L.heatLayer(pts, { radius: 10, blur: 8, maxZoom: 14 }).addTo(ridesHeat);
-            });
-            // ride start points for the clickable dots layer
-            const rides = await (await fetch('/static/data/rides.json')).json();
+            const rides = await (await fetch('/static/data/ride_tracks.json')).json();
+            const heatPts = [];
             for (const r of rides) {
-                L.circleMarker([r.lat, r.lng], { radius: 3, weight: 0, fillColor: '#e67e22', fillOpacity: 0.7 })
-                    .bindPopup(`<b>${r.n}</b><br>${r.d}`).addTo(ridesDots);
+                for (const p of r.p) heatPts.push([p[0], p[1], 0.35]);
+                L.polyline(r.p, { color: '#e67e22', weight: 2, opacity: 0.55 })
+                    .bindPopup(`<b>${r.n}</b><br>${r.d}`).addTo(ridesLines);
             }
+            L.heatLayer(heatPts, { radius: 10, blur: 8, maxZoom: 14 }).addTo(ridesHeat);
         }
 
         // ---------- fire perimeters (loaded lazily from NIFC) ----------
@@ -89,14 +86,14 @@
         }
 
         map.on('overlayadd', (e) => {
-            if (e.layer === ridesDots || e.layer === ridesHeat) loadRides();
+            if (e.layer === ridesLines || e.layer === ridesHeat) loadRides();
             if (e.layer === fireLayer) loadFires();
         });
 
         L.control.layers(
             { 'Cycling (CyclOSM)': cyclosm, 'Topo': topo, 'Satellite': satellite },
             { 'Precipitation': precip, 'Clouds': clouds, 'Radar': radar,
-              'My rides (heat)': ridesHeat, 'My rides (dots)': ridesDots, 'Active fires': fireLayer },
+              'My rides (heat)': ridesHeat, 'My rides (lines)': ridesLines, 'Active fires': fireLayer },
             { collapsed: false }
         ).addTo(map);
 
