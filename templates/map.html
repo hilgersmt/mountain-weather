@@ -6,6 +6,7 @@
     <title>Map — Mountain Weather</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/static/images/evil.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-fullscreen@1.0.2/dist/leaflet.fullscreen.css">
     <style>
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
         #topbar { padding: 10px 16px; background: #2c3e50; color: #fff; display: flex; align-items: center; gap: 16px; }
@@ -15,6 +16,9 @@
         .legend { background: #fff; padding: 8px 10px; border-radius: 6px; line-height: 1.5; box-shadow: 0 1px 4px rgba(0,0,0,.3); font-size: 13px; }
         .cam-popup img { width: 260px; aspect-ratio: 16 / 9; object-fit: cover; display: block; margin-top: 6px; border-radius: 4px; background: #ddd; }
         .mk { font-size: var(--mk-size, 26px); filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)); transition: font-size .15s; }
+        .wx { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+        .wx .temp { font-size: calc(var(--mk-size, 26px) * 0.55); font-weight: 700; background: rgba(255,255,255,.85); border-radius: 6px; padding: 0 4px; color: #c0392b; }
+        .locate-btn { background: #fff; width: 30px; height: 30px; line-height: 30px; text-align: center; cursor: pointer; font-size: 16px; display: block; }
     </style>
 </head>
 <body>
@@ -24,41 +28,131 @@
     </div>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-fullscreen@1.0.2/dist/Leaflet.fullscreen.min.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     <script>
         const locations = {{!locations_json}};
         const cameras = {{!cameras_json}};
 
-        const map = L.map('map');
-        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            maxZoom: 16,
-            attribution: '&copy; OpenStreetMap, OpenTopoMap'
-        }).addTo(map);
+        // ---------- base layers ----------
+        const cyclosm = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
+            { maxZoom: 17, attribution: '&copy; OpenStreetMap, CyclOSM' });
+        const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+            { maxZoom: 16, attribution: '&copy; OpenStreetMap, OpenTopoMap' });
+        const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            { maxZoom: 18, attribution: 'Imagery &copy; Esri' });
 
-        const weatherIcon = L.divIcon({ html: '<span class="mk">⛅</span>', className: '', iconSize: [34, 34], iconAnchor: [17, 17] });
+        const map = L.map('map', { layers: [cyclosm], fullscreenControl: true, preferCanvas: true });
+        L.control.scale({ imperial: true }).addTo(map);
+
+        // ---------- weather overlays (server-proxied; key stays private) ----------
+        const precip = L.tileLayer('/owmtile/precipitation_new/{z}/{x}/{y}.png', { opacity: 0.7 });
+        const clouds = L.tileLayer('/owmtile/clouds_new/{z}/{x}/{y}.png', { opacity: 0.6 });
+        const radar = L.tileLayer('https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png',
+            { opacity: 0.6, attribution: 'Radar: Iowa State Mesonet' });
+
+        // ---------- my rides (loaded lazily) ----------
+        const ridesDots = L.layerGroup();
+        const ridesHeat = L.layerGroup();
+        let ridesLoaded = false;
+        async function loadRides() {
+            if (ridesLoaded) return;
+            ridesLoaded = true;
+            const rides = await (await fetch('/static/data/rides.json')).json();
+            const pts = rides.map(r => [r.lat, r.lng, 0.6]);
+            L.heatLayer(pts, { radius: 18, blur: 14, maxZoom: 13 }).addTo(ridesHeat);
+            for (const r of rides) {
+                L.circleMarker([r.lat, r.lng], { radius: 3, weight: 0, fillColor: '#e67e22', fillOpacity: 0.7 })
+                    .bindPopup(`<b>${r.n}</b><br>${r.d}`).addTo(ridesDots);
+            }
+        }
+
+        // ---------- fire perimeters (loaded lazily from NIFC) ----------
+        const fireLayer = L.layerGroup();
+        let fireLoaded = false;
+        async function loadFires() {
+            if (fireLoaded) return;
+            fireLoaded = true;
+            const url = 'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters_Current/FeatureServer/0/query?where=1%3D1&outFields=poly_IncidentName,poly_GISAcres&outSR=4326&f=geojson&resultRecordCount=1000';
+            try {
+                const gj = await (await fetch(url)).json();
+                L.geoJSON(gj, {
+                    style: { color: '#c0392b', weight: 2, fillColor: '#e74c3c', fillOpacity: 0.25 },
+                    onEachFeature: (f, l) => l.bindPopup(
+                        `<b>🔥 ${f.properties.poly_IncidentName || 'Fire'}</b><br>${Math.round(f.properties.poly_GISAcres || 0).toLocaleString()} acres`)
+                }).addTo(fireLayer);
+            } catch (e) { console.log('fire layer failed', e); }
+        }
+
+        map.on('overlayadd', (e) => {
+            if (e.layer === ridesDots || e.layer === ridesHeat) loadRides();
+            if (e.layer === fireLayer) loadFires();
+        });
+
+        L.control.layers(
+            { 'Cycling (CyclOSM)': cyclosm, 'Topo': topo, 'Satellite': satellite },
+            { 'Precipitation': precip, 'Clouds': clouds, 'Radar': radar,
+              'My rides (heat)': ridesHeat, 'My rides (dots)': ridesDots, 'Active fires': fireLayer },
+            { collapsed: false }
+        ).addTo(map);
+
+        // ---------- locate me ----------
+        const locateCtl = L.control({ position: 'topleft' });
+        locateCtl.onAdd = () => {
+            const div = L.DomUtil.create('div', 'leaflet-bar');
+            div.innerHTML = '<a class="locate-btn" href="#" title="Show my location">📍</a>';
+            div.onclick = (ev) => {
+                ev.preventDefault();
+                navigator.geolocation.getCurrentPosition(p => {
+                    const ll = [p.coords.latitude, p.coords.longitude];
+                    L.circleMarker(ll, { radius: 8, color: '#2980b9', fillOpacity: 0.6 }).addTo(map).bindPopup('You are here');
+                    map.setView(ll, 12);
+                });
+            };
+            return div;
+        };
+        locateCtl.addTo(map);
+
+        // ---------- markers ----------
         const camIcon = L.divIcon({ html: '<span class="mk">📷</span>', className: '', iconSize: [30, 30], iconAnchor: [15, 15] });
-
         const bounds = [];
+        const weatherMarkers = {};
+        function weatherIconHtml(temp) {
+            return temp == null ? '<span class="mk wx">⛅</span>'
+                : `<span class="mk wx">⛅<span class="temp">${Math.round(temp)}°</span></span>`;
+        }
         for (const [key, loc] of Object.entries(locations)) {
             bounds.push([loc.lat, loc.lon]);
-            L.marker([loc.lat, loc.lon], { icon: weatherIcon, zIndexOffset: 100 })
-                .addTo(map)
-                .bindPopup(`<b>${loc.name}</b> (${loc.elevation})<br>Weather point for <a href="/${key}">/${key}</a><br><i>${loc.description}</i>`);
+            weatherMarkers[key] = L.marker([loc.lat, loc.lon], {
+                icon: L.divIcon({ html: weatherIconHtml(null), className: '', iconSize: [60, 34], iconAnchor: [17, 17] }),
+                zIndexOffset: 100
+            }).addTo(map).bindPopup(
+                `<b>${loc.name}</b> (${loc.elevation})<br>Weather point for <a href="/${key}">/${key}</a><br><i>${loc.description}</i>`);
         }
         for (const c of cameras) {
-            L.marker([c.lat, c.lon], { icon: camIcon })
-                .addTo(map)
-                .bindPopup(`<div class="cam-popup"><b>${c.name}</b><a href="${c.url}" target="_blank" rel="noopener"><img src="${c.url}" alt="${c.name}" loading="lazy"></a></div>`, { maxWidth: 290 });
+            L.marker([c.lat, c.lon], { icon: camIcon }).addTo(map).bindPopup(
+                `<div class="cam-popup"><b>${c.name}</b><a href="${c.url}" target="_blank" rel="noopener"><img src="${c.url}" alt="${c.name}" loading="lazy"></a></div>`,
+                { maxWidth: 290 });
         }
+
+        // live temperature badges
+        fetch('/api/temps').then(r => r.json()).then(temps => {
+            for (const [key, t] of Object.entries(temps)) {
+                if (weatherMarkers[key] && t != null)
+                    weatherMarkers[key].setIcon(L.divIcon({ html: weatherIconHtml(t), className: '', iconSize: [60, 34], iconAnchor: [17, 17] }));
+            }
+        }).catch(() => {});
+
+        // ---------- focus / zoom behavior ----------
         const focusKey = new URLSearchParams(window.location.search).get('loc');
         if (focusKey && locations[focusKey]) {
             const f = locations[focusKey];
             map.setView([f.lat, f.lon], 12);
-            const ring = L.circleMarker([f.lat, f.lon], { radius: 22, color: '#e74c3c', weight: 3, fill: false }).addTo(map);
+            L.circleMarker([f.lat, f.lon], { radius: 22, color: '#e74c3c', weight: 3, fill: false }).addTo(map);
         } else {
             map.fitBounds(bounds, { padding: [40, 40] });
         }
 
-        // Scale marker glyphs with zoom: tiny when zoomed out, prominent when close
         function sizeMarkers() {
             const z = map.getZoom();
             const px = Math.max(12, Math.min(34, Math.round(z * 2.6 - 6)));
@@ -70,7 +164,7 @@
         const legend = L.control({ position: 'bottomleft' });
         legend.onAdd = () => {
             const div = L.DomUtil.create('div', 'legend');
-            div.innerHTML = '⛅ weather forecast point<br>📷 webcam (click for live view)';
+            div.innerHTML = '⛅ weather point (live temp)<br>📷 webcam (click for live view)<br>Layers: weather, radar, rides, fires ↗';
             return div;
         };
         legend.addTo(map);

@@ -51,6 +51,52 @@ def favicon():
 
 
 
+
+# ---------------------------------------------------------------------------
+# Map support endpoints
+# ---------------------------------------------------------------------------
+import time as _time
+import requests as _requests
+
+_temps_cache = {'ts': 0, 'data': {}}
+
+@route('/api/temps')
+def api_temps():
+    """Current temperature for every locale (10-min cache) for map badges."""
+    from bottle import response
+    from config import LOCATIONS
+    now = _time.time()
+    if now - _temps_cache['ts'] > 600:
+        data = {}
+        for key, loc in LOCATIONS.items():
+            try:
+                w = weather_service.get_weather(loc['lat'], loc['lon'])
+                data[key] = w['current']['temp'] if w else None
+            except Exception:
+                data[key] = None
+        _temps_cache.update(ts=now, data=data)
+    response.content_type = 'application/json'
+    import json as _json
+    return _json.dumps(_temps_cache['data'])
+
+
+@route('/owmtile/<layer>/<z:int>/<x:int>/<y:int>.png')
+def owm_tile(layer, z, x, y):
+    """Proxy OpenWeatherMap weather tiles so the API key stays server-side."""
+    from bottle import response, abort
+    if layer not in ('precipitation_new', 'clouds_new', 'temp_new'):
+        abort(404)
+    try:
+        r = _requests.get(
+            f'https://tile.openweathermap.org/map/{layer}/{z}/{x}/{y}.png',
+            params={'appid': API_KEY}, timeout=8)
+        response.content_type = 'image/png'
+        response.set_header('Cache-Control', 'public, max-age=600')
+        return r.content
+    except Exception:
+        abort(502)
+
+
 @route('/map')
 def site_map():
     """Interactive map of all weather points and webcam locations."""
