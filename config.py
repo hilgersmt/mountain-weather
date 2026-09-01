@@ -135,8 +135,63 @@ LOCATIONS = {
         'forecast_link': 'https://www.wunderground.com/forecast/us/ca/idyllwild/KCAIDYLL14?cm_ven=localwx_10day',
         'webcams': _WEBCAM_URLS.get('Idyllwild', {}).get('webcams', []),
         'live_webcams': _WEBCAM_URLS.get('Idyllwild', {}).get('live_webcams', [])
+    },
+    'woodson': {
+        'name': 'Mount Woodson',
+        'lat': 33.0076,
+        'lon': -116.9715,
+        'elevation': '2894 ft',
+        'description': 'Mount Woodson and the Sycamore Canyon trails above Poway',
+        'forecast_link': 'https://www.wunderground.com/forecast/us/ca/poway?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Mount Woodson', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Mount Woodson', {}).get('live_webcams', [])
+    },
+
+    'cowles': {
+        'name': 'Cowles Mountain',
+        'lat': 32.8087,
+        'lon': -117.0303,
+        'elevation': '1593 ft',
+        'description': 'Mission Trails Regional Park and the highest point in the city of San Diego',
+        'forecast_link': 'https://www.wunderground.com/forecast/us/ca/san-diego?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Cowles Mountain', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Cowles Mountain', {}).get('live_webcams', [])
+    },
+
+    'doublepeak': {
+        'name': 'Double Peak',
+        'lat': 33.1030,
+        'lon': -117.1745,
+        'elevation': '1644 ft',
+        'description': 'Double Peak above San Elijo Hills and the La Costa trail network',
+        'forecast_link': 'https://www.wunderground.com/forecast/us/ca/san-marcos?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Double Peak', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Double Peak', {}).get('live_webcams', [])
+    },
+
+    'daleyranch': {
+        'name': 'Daley Ranch',
+        'lat': 33.1700,
+        'lon': -117.0550,
+        'elevation': '1983 ft',
+        'description': 'Daley Ranch preserve above Escondido, up to Stanley Peak',
+        'forecast_link': 'https://www.wunderground.com/forecast/us/ca/escondido?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Daley Ranch', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Daley Ranch', {}).get('live_webcams', [])
+    },
+
+    'lakehodges': {
+        'name': 'Lake Hodges',
+        'lat': 33.0520,
+        'lon': -117.0692,
+        'elevation': '330 ft',
+        'description': 'Lake Hodges, Raptor Ridge, and the San Pasqual valley trails',
+        'forecast_link': 'https://www.wunderground.com/forecast/us/ca/escondido?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Lake Hodges', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Lake Hodges', {}).get('live_webcams', [])
     }
 }
+
 
 # Default location when accessing root URL
 DEFAULT_LOCATION = 'laguna'

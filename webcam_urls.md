@@ -64,3 +64,32 @@ OFFLINE - https://example.com/offline-webcam.jpg
 ### Live Streams
 #- https://www.youtube.com/embed/McvjOooIhiI?si=_trD76d0Bgj3DHDy
 #- https://www.youtube.com/embed/TGf2CJrm0TE?si=-7twwfT0d68urlq_
+
+## Mount Woodson
+
+### Current Views
+- https://cdn.hpwren.ucsd.edu/RT/wc-axis.jpg
+
+## Cowles Mountain
+
+### Current Views
+- https://cdn.hpwren.ucsd.edu/RT/cowles-axis.jpg
+- https://cdn.hpwren.ucsd.edu/RT/sdsu-chappycam.jpg
+
+## Double Peak
+
+### Current Views
+- https://cameras.alertcalifornia.org/public-camera-data/Axis-DoublePeak2/latest-frame.jpg
+- https://cameras.alertcalifornia.org/public-camera-data/Axis-LaCosta2/latest-frame.jpg
+
+## Daley Ranch
+
+### Current Views
+- https://cdn.hpwren.ucsd.edu/RT/wlfd-n-axis.jpg
+- https://cdn.hpwren.ucsd.edu/RT/wlfd-s-axis.jpg
+
+## Lake Hodges
+
+### Current Views
+- https://cameras.alertcalifornia.org/public-camera-data/Axis-Felicita2/latest-frame.jpg
+- https://cameras.alertcalifornia.org/public-camera-data/Axis-SafariParkWest2/latest-frame.jpg
