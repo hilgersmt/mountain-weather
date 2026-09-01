@@ -210,8 +210,30 @@ LOCATIONS = {
         'forecast_link': 'https://www.wunderground.com/forecast/us/or/bend?cm_ven=localwx_10day',
         'webcams': _WEBCAM_URLS.get('Bend', {}).get('webcams', []),
         'live_webcams': _WEBCAM_URLS.get('Bend', {}).get('live_webcams', [])
+    },
+    'parkcity': {
+        'name': 'Park City, UT',
+        'lat': 40.6510,
+        'lon': -111.5070,
+        'elevation': '7000 ft',
+        'description': 'Park City and Deer Valley trail networks in the Wasatch',
+        'forecast_link': 'https://www.wunderground.com/forecast/us/ut/park-city?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Park City', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Park City', {}).get('live_webcams', [])
+    },
+
+    'sedona': {
+        'name': 'Sedona, AZ',
+        'lat': 34.7927,
+        'lon': -111.7607,
+        'elevation': '4350 ft',
+        'description': 'Red rock riding: Slim Shady, Hiline, and the Sedona trail web',
+        'forecast_link': 'https://www.wunderground.com/forecast/us/az/sedona?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Sedona', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Sedona', {}).get('live_webcams', [])
     }
 }
+
 
 
 
@@ -379,5 +401,23 @@ MAP_CAMERAS = [
     "lat": 43.995,
     "lon": -121.66,
     "url": "https://api.mtbachelor.com/api/v1/cams/mtn/5"
+  },
+  {
+    "name": "Park City Old Town (UDOT)",
+    "lat": 40.6511,
+    "lon": -111.5065,
+    "url": "https://udottraffic.utah.gov/map/Cctv/104068"
+  },
+  {
+    "name": "Ontario Mine / Marsac RWIS (UDOT)",
+    "lat": 40.628,
+    "lon": -111.494,
+    "url": "https://udottraffic.utah.gov/map/Cctv/103691"
+  },
+  {
+    "name": "Mayflower Summit RWIS (UDOT)",
+    "lat": 40.616,
+    "lon": -111.465,
+    "url": "https://udottraffic.utah.gov/map/Cctv/104426"
   }
 ]
