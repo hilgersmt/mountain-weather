@@ -1,6 +1,6 @@
 # Mountain Weather Website
 
-A modern, responsive weather monitoring application for mountain locations with user-selectable themes and clean architecture.
+Web app that gives me views and current (and forecasted) weather for my favorite trailheads.
 
 ## Features
 
