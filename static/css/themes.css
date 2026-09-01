@@ -1,0 +1,133 @@
+/**
+ * Theme Definitions
+ * Three user-selectable themes using CSS custom properties
+ */
+
+/* Default Theme: Modern Light */
+:root,
+html[data-theme="modern-light"] {
+    --bg-primary: #f5f7fa;
+    --bg-secondary: #e8ecf1;
+    --card-bg: #ffffff;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --accent: #3498db;
+    --hover-bg: #e8f4fd;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark Mode Theme */
+html[data-theme="dark"] {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --card-bg: #0f3460;
+    --text-primary: #eaeaea;
+    --text-secondary: #b0b0b0;
+    --accent: #3498db;
+    --hover-bg: #16213e;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Dark Mode - Adjust specific elements for better contrast */
+html[data-theme="dark"] .detail-item {
+    background-color: var(--bg-secondary);
+}
+
+html[data-theme="dark"] .error-banner {
+    background-color: #e74c3c;
+}
+
+html[data-theme="dark"] .nav-link.active {
+    background-color: var(--accent);
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .temp-low {
+    color: #95afc0;
+}
+
+/* High Contrast Theme (WCAG AAA Compliant) */
+html[data-theme="high-contrast"] {
+    --bg-primary: #000000;
+    --bg-secondary: #1a1a1a;
+    --card-bg: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #ffff00;
+    --accent: #ffff00;
+    --hover-bg: #333333;
+    --shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+    --shadow-hover: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+/* High Contrast - Enhanced visibility adjustments */
+html[data-theme="high-contrast"] .nav-link {
+    border: 2px solid transparent;
+}
+
+html[data-theme="high-contrast"] .nav-link:hover {
+    border-color: var(--accent);
+}
+
+html[data-theme="high-contrast"] .nav-link.active {
+    background-color: var(--accent);
+    color: #000000;
+    font-weight: 700;
+}
+
+html[data-theme="high-contrast"] #theme-select {
+    border: 3px solid var(--accent);
+    font-weight: 600;
+}
+
+html[data-theme="high-contrast"] .detail-item {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--text-secondary);
+}
+
+html[data-theme="high-contrast"] .forecast-day,
+html[data-theme="high-contrast"] .webcam-item {
+    border: 2px solid var(--text-secondary);
+}
+
+html[data-theme="high-contrast"] .temp-high {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+html[data-theme="high-contrast"] .temp-low {
+    color: #ffffff;
+}
+
+html[data-theme="high-contrast"] .error-banner {
+    background-color: #ffff00;
+    color: #000000;
+    border: 3px solid #ffffff;
+    font-weight: 700;
+}
+
+html[data-theme="high-contrast"] a {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+html[data-theme="high-contrast"] a:focus {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+/* Theme Transition for smooth switching */
+html {
+    transition: background-color 0.3s ease;
+}
+
+body,
+.current-card,
+.forecast-day,
+.webcam-item,
+header,
+footer,
+#theme-select {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="125">
+    <title>{{location['name']}} Weather Conditions</title>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/images/evil.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/evil.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/images/evil.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/static/images/evil3.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+<body>
+    <header>
+        <nav class="main-nav" role="navigation" aria-label="Main navigation">
+            <div class="nav-links">
+                % for key, loc in all_locations.items():
+                    % if key == location_key:
+                        <a href="/{{key}}" class="nav-link active" aria-current="page">{{loc['name']}}</a>
+                    % else:
+                        <a href="/{{key}}" class="nav-link">{{loc['name']}}</a>
+                    % end
+                % end
+            </div>
+
+            <div class="theme-selector">
+                <label for="theme-select" class="visually-hidden">Choose theme:</label>
+                <select id="theme-select" aria-label="Theme selector">
+                    <option value="modern-light">Modern Light</option>
+                    <option value="dark">Dark Mode</option>
+                    <option value="high-contrast">High Contrast</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        % if has_error:
+            <div class="error-banner" role="alert">
+                <p>Unable to fetch current weather data. Showing fallback information.</p>
+            </div>
+        % end
+
+        <section class="location-header">
+            <h1>{{location['name']}}</h1>
+            <p class="location-meta">
+                {{location.get('description', '')}} | Elevation: {{location.get('elevation', 'N/A')}}
+            </p>
+        </section>
+
+        <article class="current-weather" aria-label="Current weather conditions">
+            <h2 class="section-title">Current Conditions</h2>
+            <div class="current-card">
+                <div class="temp-display">
+                    <img src="{{current['icon_url']}}" alt="Weather icon" class="weather-icon">
+                    <div class="temp-value">{{current['temp']}}<span class="unit">°F</span></div>
+                </div>
+                <div class="current-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Feels like:</span>
+                        <span class="detail-value">{{current['feels_like']}}°F</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Wind speed:</span>
+                        <span class="detail-value">{{current['wind_speed']}} mph</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Visibility:</span>
+                        <span class="detail-value">{{current['visibility']}} miles</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="forecast" aria-label="7-day forecast">
+            <h2 class="section-title">7-Day Forecast</h2>
+            <div class="forecast-grid">
+                % for day in forecast:
+                    <div class="forecast-day">
+                        <div class="forecast-date">{{day['date']}}</div>
+                        <img src="{{day['icon_url']}}" alt="Weather icon" class="forecast-icon">
+                        <div class="forecast-temps">
+                            <span class="temp-high">{{day['temp_max']}}°</span>
+                            <span class="temp-separator">|</span>
+                            <span class="temp-low">{{day['temp_min']}}°</span>
+                        </div>
+                    </div>
+                % end
+            </div>
+            <div class="forecast-link">
+                <a href="{{location['forecast_link']}}" target="_blank" rel="noopener noreferrer">
+                    Detailed forecast for {{location['name']}}
+                </a>
+            </div>
+        </article>
+
+        <article class="webcams" aria-label="Current webcam views">
+            <h2 class="section-title">Current Views from {{location['name']}}</h2>
+
+            % if location['webcams']:
+                <div class="webcam-grid">
+                    % for webcam in location['webcams']:
+                        <div class="webcam-item">
+                            <a href="{{webcam}}" target="_blank" rel="noopener noreferrer">
+                                <img src="{{webcam}}" alt="Webcam view from {{location['name']}}" class="webcam-image" loading="lazy">
+                            </a>
+                        </div>
+                    % end
+                </div>
+            % else:
+                <p class="no-webcams">No webcams available for this location.</p>
+            % end
+
+            % if location['live_webcams']:
+                <div class="live-webcams">
+                    <h3 class="subsection-title">Live Streams</h3>
+                    <div class="live-webcam-grid">
+                        % for live_webcam in location['live_webcams']:
+                            <div class="live-webcam-item">
+                                <iframe
+                                    src="{{live_webcam}}"
+                                    title="Live webcam stream"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allowfullscreen
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                        % end
+                    </div>
+                </div>
+            % end
+        </article>
+    </main>
+
+    <footer role="contentinfo">
+        <p>Data provided by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a></p>
+        <p>Webcams courtesy of <a href="https://hpwren.ucsd.edu/" target="_blank" rel="noopener noreferrer">HPWREN</a></p>
+    </footer>
+
+    <!-- Theme Switcher Script -->
+    <script src="/static/js/theme-switcher.js"></script>
+</body>
+</html>

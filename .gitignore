@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+.DS_Store
+._*
+*.backup
+mynewsite.tar
+static/images/bak/
+icon_options/

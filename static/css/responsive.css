@@ -1,0 +1,210 @@
+/**
+ * Responsive Design - Mobile Breakpoints
+ * Mobile-first approach with progressive enhancement
+ */
+
+/* Mobile Devices (< 768px) - Default styles in base.css */
+/* Single column layout, stacked elements */
+
+/* Tablet Devices (768px and up) */
+@media (min-width: 768px) {
+    /* Navigation */
+    .main-nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+    }
+
+    .nav-links {
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+
+    .theme-selector {
+        justify-content: flex-end;
+    }
+
+    /* Main Content */
+    main {
+        padding: 2rem 2rem;
+    }
+
+    /* Current Weather */
+    .current-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .temp-display {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .current-details {
+        flex: 1;
+        max-width: 400px;
+    }
+
+    /* Forecast Grid */
+    .forecast-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.75rem;
+    }
+
+    /* Webcam Grid */
+    .webcam-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    /* Live Webcams */
+    .live-webcam-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    /* Location Header */
+    .location-header h1 {
+        font-size: 3rem;
+    }
+}
+
+/* Desktop Devices (1024px and up) */
+@media (min-width: 1024px) {
+    /* Main Content */
+    main {
+        padding: 3rem 2rem;
+    }
+
+    /* Webcam Grid */
+    .webcam-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    /* Current Weather */
+    .current-card {
+        padding: 3rem;
+    }
+
+    .weather-icon {
+        width: 120px;
+        height: 120px;
+    }
+
+    .temp-value {
+        font-size: 5rem;
+    }
+
+    /* Section Titles */
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+/* Large Desktop (1440px and up) */
+@media (min-width: 1440px) {
+    /* Webcam Grid */
+    .webcam-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+
+    /* Location Header */
+    .location-header h1 {
+        font-size: 3.5rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header,
+    footer,
+    .theme-selector,
+    .live-webcams {
+        display: none;
+    }
+
+    body {
+        background-color: white;
+        color: black;
+    }
+
+    .current-card,
+    .forecast-day,
+    .webcam-item {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+
+    .forecast-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High Contrast Mode (Windows) */
+@media (prefers-contrast: high) {
+    .nav-link,
+    .forecast-day,
+    .webcam-item,
+    #theme-select {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Small Mobile Devices (< 375px) */
+@media (max-width: 374px) {
+    .location-header h1 {
+        font-size: 2rem;
+    }
+
+    .temp-value {
+        font-size: 3rem;
+    }
+
+    .weather-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .forecast-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+}
+
+/* Landscape Orientation on Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .current-card {
+        flex-direction: row;
+    }
+
+    .temp-display {
+        flex-direction: row;
+    }
+
+    .forecast-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+}
