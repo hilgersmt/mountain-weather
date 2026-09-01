@@ -189,8 +189,30 @@ LOCATIONS = {
         'forecast_link': 'https://www.wunderground.com/forecast/us/ca/escondido?cm_ven=localwx_10day',
         'webcams': _WEBCAM_URLS.get('Lake Hodges', {}).get('webcams', []),
         'live_webcams': _WEBCAM_URLS.get('Lake Hodges', {}).get('live_webcams', [])
+    },
+    'jamul': {
+        'name': 'Jamul',
+        'lat': 32.7396,
+        'lon': -116.9124,
+        'elevation': '1000 ft',
+        'description': 'Jamul and Lyons Valley backcountry, under San Miguel and Lyons Peak',
+        'forecast_link': 'https://www.wunderground.com/forecast/us/ca/jamul?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Jamul', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Jamul', {}).get('live_webcams', [])
+    },
+
+    'bend': {
+        'name': 'Bend',
+        'lat': 44.0430,
+        'lon': -121.3730,
+        'elevation': '3900 ft',
+        'description': "Phil's Trails and central Oregon riding, with Mt. Bachelor cams",
+        'forecast_link': 'https://www.wunderground.com/forecast/us/or/bend?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Bend', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Bend', {}).get('live_webcams', [])
     }
 }
+
 
 
 # Default location when accessing root URL
@@ -216,3 +238,146 @@ def get_all_locations():
         Dictionary of all location configurations
     """
     return LOCATIONS
+
+
+# Camera locations for the /map page (name, lat, lon, image url)
+MAP_CAMERAS = [
+  {
+    "name": "Mount Laguna Observatory, Laguna Mountains",
+    "lat": 32.83989,
+    "lon": -116.42658,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/mlo-n-axis.jpg"
+  },
+  {
+    "name": "Mount Woodson CAL FIRE, west of Ramona",
+    "lat": 33.00872,
+    "lon": -116.97101,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/wc-axis.jpg"
+  },
+  {
+    "name": "RAAB",
+    "lat": 33.04032,
+    "lon": -116.91175,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/raab-axis.jpg"
+  },
+  {
+    "name": "Cowles Mountain",
+    "lat": 32.81359,
+    "lon": -117.03233,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/cowles-axis.jpg"
+  },
+  {
+    "name": "San Diego State University",
+    "lat": 32.77661,
+    "lon": -117.07312,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/sdsu-chappycam.jpg"
+  },
+  {
+    "name": "Coronado Hills, Harmony Grove",
+    "lat": 33.11063,
+    "lon": -117.15296,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/ch-n-axis.jpg"
+  },
+  {
+    "name": "Rincon Del Diablo, Escondido",
+    "lat": 33.09388,
+    "lon": -117.12105,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/rdd-n-axis.jpg"
+  },
+  {
+    "name": "Lake Wohlford Airport, northeast of Escondido",
+    "lat": 33.17469,
+    "lon": -117.00441,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/wlfd-n-axis.jpg"
+  },
+  {
+    "name": "San Miguel, west of Jamul",
+    "lat": 32.69686,
+    "lon": -116.93612,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/sm-n-axis.jpg"
+  },
+  {
+    "name": "Lyons Peak, east of Jamul",
+    "lat": 32.70153,
+    "lon": -116.76457,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/lp-n-axis.jpg"
+  },
+  {
+    "name": "Marion Ridge, north of Pine Cove-Idyllwild",
+    "lat": 33.76528,
+    "lon": -116.73164,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/marion-n-axis.jpg"
+  },
+  {
+    "name": "Idyllwild Pine Cove",
+    "lat": 33.765,
+    "lon": -116.732,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/idlwld-se-delphire.jpg"
+  },
+  {
+    "name": "Black Mountain Lookout, San Jacinto Mountains",
+    "lat": 33.82422,
+    "lon": -116.75763,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/blkrc-n-axis.jpg"
+  },
+  {
+    "name": "Black Mountain, Rancho Penasquitos",
+    "lat": 32.98143,
+    "lon": -117.1165,
+    "url": "https://cdn.hpwren.ucsd.edu/RT/bl2-axis.jpg"
+  },
+  {
+    "name": "Monument Peak, Laguna Mountains",
+    "lat": 32.89225,
+    "lon": -116.42087,
+    "url": "https://cdn.hpwren.ucsd.edu/RTS/mp-n-axis-640.jpg"
+  },
+  {
+    "name": "Double Peak 2",
+    "lat": 33.109219,
+    "lon": -117.178119,
+    "url": "https://cameras.alertcalifornia.org/public-camera-data/Axis-DoublePeak2/latest-frame.jpg"
+  },
+  {
+    "name": "La Costa 2",
+    "lat": 33.105349,
+    "lon": -117.235328,
+    "url": "https://cameras.alertcalifornia.org/public-camera-data/Axis-LaCosta2/latest-frame.jpg"
+  },
+  {
+    "name": "SD Safari Park West 2",
+    "lat": 33.106305,
+    "lon": -116.987591,
+    "url": "https://cameras.alertcalifornia.org/public-camera-data/Axis-SafariParkWest2/latest-frame.jpg"
+  },
+  {
+    "name": "Idyllwild 2",
+    "lat": 33.725632,
+    "lon": -116.750679,
+    "url": "https://cameras.alertcalifornia.org/public-camera-data/Axis-Idyllwild2/latest-frame.jpg"
+  },
+  {
+    "name": "Crest 2",
+    "lat": 32.8046,
+    "lon": -116.876999,
+    "url": "https://cameras.alertcalifornia.org/public-camera-data/Axis-Crest2/latest-frame.jpg"
+  },
+  {
+    "name": "Mt. Bachelor Summit",
+    "lat": 43.9793,
+    "lon": -121.6885,
+    "url": "https://api.mtbachelor.com/api/v1/cams/mtn/8"
+  },
+  {
+    "name": "Mt. Bachelor Mid-Mountain",
+    "lat": 43.99,
+    "lon": -121.675,
+    "url": "https://api.mtbachelor.com/api/v1/cams/mtn/12"
+  },
+  {
+    "name": "Mt. Bachelor Sunrise Base",
+    "lat": 43.995,
+    "lon": -121.66,
+    "url": "https://api.mtbachelor.com/api/v1/cams/mtn/5"
+  }
+]

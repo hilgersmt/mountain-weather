@@ -64,11 +64,13 @@ OFFLINE - https://example.com/offline-webcam.jpg
 ### Live Streams
 #- https://www.youtube.com/embed/McvjOooIhiI?si=_trD76d0Bgj3DHDy
 #- https://www.youtube.com/embed/TGf2CJrm0TE?si=-7twwfT0d68urlq_
+- https://cameras.alertcalifornia.org/public-camera-data/Axis-Idyllwild2/latest-frame.jpg
 
 ## Mount Woodson
 
 ### Current Views
 - https://cdn.hpwren.ucsd.edu/RT/wc-axis.jpg
+- https://cdn.hpwren.ucsd.edu/RT/raab-axis.jpg
 
 ## Cowles Mountain
 
@@ -81,6 +83,7 @@ OFFLINE - https://example.com/offline-webcam.jpg
 ### Current Views
 - https://cameras.alertcalifornia.org/public-camera-data/Axis-DoublePeak2/latest-frame.jpg
 - https://cameras.alertcalifornia.org/public-camera-data/Axis-LaCosta2/latest-frame.jpg
+- https://cdn.hpwren.ucsd.edu/RT/ch-n-axis.jpg
 
 ## Daley Ranch
 
@@ -93,3 +96,18 @@ OFFLINE - https://example.com/offline-webcam.jpg
 ### Current Views
 - https://cameras.alertcalifornia.org/public-camera-data/Axis-Felicita2/latest-frame.jpg
 - https://cameras.alertcalifornia.org/public-camera-data/Axis-SafariParkWest2/latest-frame.jpg
+- https://cdn.hpwren.ucsd.edu/RT/rdd-n-axis.jpg
+
+## Jamul
+
+### Current Views
+- https://cdn.hpwren.ucsd.edu/RT/sm-n-axis.jpg
+- https://cdn.hpwren.ucsd.edu/RT/lp-n-axis.jpg
+- https://cameras.alertcalifornia.org/public-camera-data/Axis-Crest2/latest-frame.jpg
+
+## Bend
+
+### Current Views
+- https://api.mtbachelor.com/api/v1/cams/mtn/8
+- https://api.mtbachelor.com/api/v1/cams/mtn/12
+- https://api.mtbachelor.com/api/v1/cams/mtn/5

@@ -50,6 +50,18 @@ def favicon():
     return static_file('images/evil.png', root='./static')
 
 
+
+@route('/map')
+def site_map():
+    """Interactive map of all weather points and webcam locations."""
+    import json as _json
+    from config import LOCATIONS, MAP_CAMERAS
+    locs = {k: {'name': v['name'], 'lat': v['lat'], 'lon': v['lon'],
+                'elevation': v['elevation'], 'description': v['description']}
+            for k, v in LOCATIONS.items()}
+    return template('map', locations_json=_json.dumps(locs), cameras_json=_json.dumps(MAP_CAMERAS))
+
+
 @route('/')
 @route('/<location_key>')
 def weather_view(location_key=None):
