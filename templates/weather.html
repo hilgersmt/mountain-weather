@@ -53,6 +53,7 @@
             <h1>{{location['name']}}</h1>
             <p class="location-meta">
                 {{location.get('description', '')}} | Elevation: {{location.get('elevation', 'N/A')}}
+                | <a href="/map?loc={{location_key}}" class="map-button" title="Show this location and its webcams on the map">🗺 View on map</a>
             </p>
         </section>
 
