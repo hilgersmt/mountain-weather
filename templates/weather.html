@@ -19,26 +19,17 @@
 </head>
 <body>
     <header>
-        <nav class="main-nav" role="navigation" aria-label="Main navigation">
-            <div class="nav-links">
-                % for key, loc in all_locations.items():
-                    % if key == location_key:
-                        <a href="/{{key}}" class="nav-link active" aria-current="page">{{loc['name']}}</a>
-                    % else:
-                        <a href="/{{key}}" class="nav-link">{{loc['name']}}</a>
+        <div class="top-bar">
+            <div class="location-selector">
+                <label for="location-select" class="visually-hidden">Choose location:</label>
+                <select id="location-select" aria-label="Location selector"
+                        onchange="if(this.value){window.location.href=this.value;}">
+                    % for key, loc in all_locations.items():
+                        <option value="/{{key}}" {{'selected' if key == location_key else ''}}>{{loc['name']}}</option>
                     % end
-                % end
-            </div>
-
-            <div class="theme-selector">
-                <label for="theme-select" class="visually-hidden">Choose theme:</label>
-                <select id="theme-select" aria-label="Theme selector">
-                    <option value="modern-light">Modern Light</option>
-                    <option value="dark">Dark Mode</option>
-                    <option value="high-contrast">High Contrast</option>
                 </select>
             </div>
-        </nav>
+        </div>
     </header>
 
     <main role="main">
@@ -143,6 +134,16 @@
     </main>
 
     <footer role="contentinfo">
+        <div class="site-controls">
+            <div class="theme-selector">
+                <label for="theme-select" class="visually-hidden">Choose theme:</label>
+                <select id="theme-select" aria-label="Theme selector">
+                    <option value="modern-light">Modern Light</option>
+                    <option value="dark">Dark Mode</option>
+                    <option value="high-contrast">High Contrast</option>
+                </select>
+            </div>
+        </div>
         <p>Data provided by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a></p>
         <p>Webcams courtesy of <a href="https://hpwren.ucsd.edu/" target="_blank" rel="noopener noreferrer">HPWREN</a></p>
     </footer>
