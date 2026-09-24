@@ -7,7 +7,7 @@
     'use strict';
 
     const THEME_STORAGE_KEY = 'mountain-weather-theme';
-    const DEFAULT_THEME = 'modern-light';
+    const DEFAULT_THEME = 'dark';
     const themeSelect = document.getElementById('theme-select');
 
     /**
