@@ -25,6 +25,24 @@ API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')  # set in .env (never commit the k
 weather_service = WeatherService(API_KEY)
 
 
+# Cache-busting token for static CSS/JS: newest file mtime, as an int string.
+# git checkout/pull updates mtimes, so this changes automatically on each deploy
+# and forces browsers to refetch changed stylesheets/scripts (no manual bumping).
+def _asset_version():
+    import glob
+    base = os.path.dirname(__file__)
+    latest = 0
+    for pattern in ('static/css/*.css', 'static/js/*.js'):
+        for f in glob.glob(os.path.join(base, pattern)):
+            try:
+                latest = max(latest, int(os.path.getmtime(f)))
+            except OSError:
+                pass
+    return str(latest)
+
+ASSET_VER = _asset_version()
+
+
 @route('/static/<filepath:path>')
 def serve_static(filepath):
     """
@@ -149,7 +167,8 @@ def weather_view(location_key=None):
         'all_locations': get_all_locations(),
         'current': weather_data['current'] if weather_data else {},
         'forecast': weather_data['forecast'] if weather_data else [],
-        'has_error': has_error
+        'has_error': has_error,
+        'asset_ver': ASSET_VER
     }
 
     return template('weather', **context)
