@@ -71,6 +71,34 @@
             </div>
         </article>
 
+        % if snotel:
+        <article class="snowpack" aria-label="Snowpack conditions">
+            <h2 class="section-title">Snowpack</h2>
+            <div class="current-card">
+                <div class="current-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Snow depth:</span>
+                        <span class="detail-value">{{snotel.get('snow_depth', '--')}} in</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Snow-water equiv:</span>
+                        <span class="detail-value">{{snotel.get('swe', '--')}} in</span>
+                    </div>
+                    % if snotel.get('temp') is not None:
+                    <div class="detail-item">
+                        <span class="detail-label">Station temp:</span>
+                        <span class="detail-value">{{snotel.get('temp')}}°F</span>
+                    </div>
+                    % end
+                </div>
+                <p class="location-meta">
+                    Source: {{snotel.get('name', '')}} SNOTEL{{' (' + snotel['station_elevation'] + ')' if snotel.get('station_elevation') else ''}}
+                    · as of {{snotel.get('date', 'n/a')}}
+                </p>
+            </div>
+        </article>
+        % end
+
         <article class="forecast" aria-label="7-day forecast">
             <h2 class="section-title">7-Day Forecast</h2>
             <div class="forecast-grid">

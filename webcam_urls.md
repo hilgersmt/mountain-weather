@@ -105,12 +105,24 @@ OFFLINE - https://example.com/offline-webcam.jpg
 - https://cdn.hpwren.ucsd.edu/RT/lp-n-axis.jpg
 - https://cameras.alertcalifornia.org/public-camera-data/Axis-Crest2/latest-frame.jpg
 
-## Bend
+## Bend Alpine
 
 ### Current Views
-- https://api.mtbachelor.com/api/v1/cams/mtn/8
 - https://api.mtbachelor.com/api/v1/cams/mtn/12
+<!-- mtn/8 = "Top of Sunrise" (~7,700 ft); often dormant off-season, may show a stale frame -->
+- https://api.mtbachelor.com/api/v1/cams/mtn/8
+
+## Bend Mid
+
+### Current Views
+<!-- Reuse Sunrise Base (mtn/5, ~6,300 ft) — closest cam to the ~5,700 ft mid band -->
 - https://api.mtbachelor.com/api/v1/cams/mtn/5
+
+## Bend Town
+
+### Current Views
+<!-- ODOT TripCheck: US97 at Lava Butte (~4,514 ft), just south of Bend -->
+- https://www.tripcheck.com/roadcams/cams/LavaButte_pid631.jpg
 
 ## Park City
 

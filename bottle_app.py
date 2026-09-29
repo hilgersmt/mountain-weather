@@ -78,6 +78,24 @@ import requests as _requests
 
 _temps_cache = {'ts': 0, 'data': {}}
 
+# SNOTEL readings change once a day; cache per station triplet for an hour.
+_snotel_cache = {}  # triplet -> {'ts': float, 'data': dict|None}
+
+
+def _get_snotel_cached(triplet):
+    """Fetch a SNOTEL reading with a 1-hour cache; never raises."""
+    from snotel_service import get_snotel
+    now = _time.time()
+    cached = _snotel_cache.get(triplet)
+    if cached and now - cached['ts'] < 3600:
+        return cached['data']
+    try:
+        data = get_snotel(triplet)
+    except Exception:
+        data = None
+    _snotel_cache[triplet] = {'ts': now, 'data': data}
+    return data
+
 @route('/api/temps')
 def api_temps():
     """Current temperature for every locale (10-min cache) for map badges."""
@@ -160,6 +178,16 @@ def weather_view(location_key=None):
     # Check if API call failed
     has_error = weather_data and weather_data.get('error', False)
 
+    # Optional live snowpack reading for high-elevation locations (e.g. Bachelor).
+    snotel = None
+    snotel_cfg = location.get('snotel')
+    if snotel_cfg:
+        reading = _get_snotel_cached(snotel_cfg['triplet'])
+        if reading:
+            snotel = dict(reading)
+            snotel['name'] = snotel_cfg.get('name', 'SNOTEL')
+            snotel['station_elevation'] = snotel_cfg.get('elevation', '')
+
     # Prepare template context
     context = {
         'location': location,
@@ -167,6 +195,7 @@ def weather_view(location_key=None):
         'all_locations': get_all_locations(),
         'current': weather_data['current'] if weather_data else {},
         'forecast': weather_data['forecast'] if weather_data else [],
+        'snotel': snotel,
         'has_error': has_error,
         'asset_ver': ASSET_VER
     }
