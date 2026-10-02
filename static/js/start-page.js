@@ -9,8 +9,9 @@
  *
  * Only "/" redirects on load, so the dropdown and direct links keep working.
  * Changing the setting jumps straight to the new start page, from any page.
- * Each page also shows its distance from the user, only if location access
- * is already granted (never prompts).
+ * Each page also shows its distance from the user without ever prompting:
+ * from a fresh fix if location is granted, else a fix shared in the last
+ * 15 minutes (labelled with its age).
  * The position never leaves the browser; distances are computed here.
  */
 
@@ -18,6 +19,14 @@
     'use strict';
 
     const START_STORAGE_KEY = 'mountain-weather-start';
+    // Last position this device shared, for the "N miles from you" line. Some
+    // browsers (Safari set to "Ask", Chrome "Allow this time") approve location
+    // without reporting a lasting "granted", so a recent fix is reused instead
+    // of prompting on every page.
+    const POSITION_STORAGE_KEY = 'mountain-weather-last-position';
+    // Short enough that a driver's distance can't be far off (~15 miles at
+    // highway speed); older fixes are shown with their age.
+    const POSITION_MAX_AGE_MS = 15 * 60 * 1000;
     const dataEl = document.getElementById('start-page-data');
     if (!dataEl) return;
 
@@ -93,6 +102,32 @@
         return { key: key, km: km };
     }
 
+    function rememberPosition(coords) {
+        try {
+            localStorage.setItem(POSITION_STORAGE_KEY, JSON.stringify({
+                lat: coords.latitude, lon: coords.longitude, t: Date.now()
+            }));
+        } catch (e) { /* storage blocked: distance just won't persist */ }
+    }
+
+    function forgetPosition() {
+        try { localStorage.removeItem(POSITION_STORAGE_KEY); } catch (e) { /* ignore */ }
+    }
+
+    /**
+     * The remembered position if it's recent enough, else null
+     */
+    function recentPosition() {
+        try {
+            const p = JSON.parse(localStorage.getItem(POSITION_STORAGE_KEY) || 'null');
+            if (p && typeof p.lat === 'number' && typeof p.lon === 'number' &&
+                Date.now() - p.t < POSITION_MAX_AGE_MS) {
+                return p;
+            }
+        } catch (e) { /* fall through */ }
+        return null;
+    }
+
     /**
      * Ask the browser for a coarse position; callback(errorMessage, match)
      */
@@ -103,10 +138,12 @@
         }
         navigator.geolocation.getCurrentPosition(
             function(pos) {
+                rememberPosition(pos.coords);
                 callback(null, nearest(pos.coords.latitude, pos.coords.longitude));
             },
             function(err) {
                 if (err.code === err.PERMISSION_DENIED) {
+                    forgetPosition();
                     callback('Location permission is off for this site. On iPhone: tap aA in the ' +
                              'address bar → Website Settings → Location → Allow.');
                 } else if (err.code === err.TIMEOUT) {
@@ -142,27 +179,51 @@
     }
 
     /**
-     * Show how far this page's location is from the user, but only when
-     * location access is already granted: this never triggers a prompt.
+     * Show how far this page's location is from the user, without ever
+     * prompting: a fresh fix if location is granted, otherwise a position this
+     * device shared within the last 15 minutes; nothing if denied or unknown.
      */
     function showDistanceIfAllowed() {
         const el = document.getElementById('location-distance');
         const here = byKey[currentKey];
-        if (!el || !here || !navigator.geolocation ||
-            !navigator.permissions || !navigator.permissions.query) return;
+        if (!el || !here) return;
+
+        function render(lat, lon, ageMs) {
+            let text = '📍 ' + formatMiles(distanceKm(lat, lon, here.lat, here.lon)) + ' from you';
+            const minutes = Math.round((ageMs || 0) / 60000);
+            if (minutes >= 2) text += ' · as of ' + minutes + ' min ago';
+            el.textContent = text;
+            el.hidden = false;
+        }
+
+        function useRemembered() {
+            const p = recentPosition();
+            if (p) render(p.lat, p.lon, Date.now() - p.t);
+        }
+
+        if (!navigator.geolocation || !navigator.permissions || !navigator.permissions.query) {
+            useRemembered();
+            return;
+        }
 
         navigator.permissions.query({ name: 'geolocation' }).then(function(status) {
-            if (status.state !== 'granted') return;
+            if (status.state === 'denied') {
+                forgetPosition();
+                return;
+            }
+            if (status.state !== 'granted') {
+                useRemembered();
+                return;
+            }
             navigator.geolocation.getCurrentPosition(
                 function(pos) {
-                    const km = distanceKm(pos.coords.latitude, pos.coords.longitude, here.lat, here.lon);
-                    el.textContent = '📍 ' + formatMiles(km) + ' from you';
-                    el.hidden = false;
+                    rememberPosition(pos.coords);
+                    render(pos.coords.latitude, pos.coords.longitude);
                 },
-                function() { /* unavailable right now: show nothing */ },
+                useRemembered,
                 { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
             );
-        }).catch(function() { /* Permissions API unsupported for geolocation */ });
+        }).catch(useRemembered);
     }
 
     function showNote(text) {
