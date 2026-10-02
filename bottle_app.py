@@ -7,10 +7,11 @@ user-selectable themes and clean architecture.
 
 import json
 import os
-from bottle import default_app, route, template, static_file, abort, TEMPLATE_PATH
+from bottle import default_app, route, hook, request, redirect, template, static_file, abort, TEMPLATE_PATH
 from dotenv import load_dotenv
 
-from config import LOCATIONS, DEFAULT_LOCATION, NEAREST_ALIASES, get_location, get_all_locations
+from config import (LOCATIONS, DEFAULT_LOCATION, NEAREST_ALIASES, CANONICAL_ORIGIN,
+                    REDIRECT_HOSTS, get_location, get_all_locations)
 from weather_service import WeatherService
 
 # Load environment variables from .env file
@@ -53,6 +54,18 @@ def _asset_version():
     return str(latest)
 
 ASSET_VER = _asset_version()
+
+
+@hook('before_request')
+def redirect_to_canonical_host():
+    """Send requests for an old host (e.g. hilgersmt.pythonanywhere.com) to the
+    same path and query on CANONICAL_ORIGIN, permanently."""
+    host = request.environ.get('HTTP_HOST', '').split(':')[0].lower()
+    if host in REDIRECT_HOSTS:
+        target = CANONICAL_ORIGIN + request.environ.get('PATH_INFO', '/')
+        if request.query_string:
+            target += '?' + request.query_string
+        redirect(target, 301)
 
 
 @route('/static/<filepath:path>')
