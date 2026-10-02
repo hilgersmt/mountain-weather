@@ -104,6 +104,45 @@ def _load_webcam_urls():
 _WEBCAM_URLS = _load_webcam_urls()
 
 LOCATIONS = {
+    # Bend / Mt. Bachelor — three tiles matching the ELEVATION BANDS the rides
+    # span (alpine ~7,000 ft high points → mid ~5,700 ft trail zone → in-town
+    # ~4,000 ft descent finishes), each with the cam(s) available at that band.
+    # Nearest real-time SNOTEL to the high country is Irish Taylor (545:OR:SNTL,
+    # 5,540 ft). NOTE: OpenWeatherMap forecasts by lat/lon grid cell — it does NOT
+    # ingest the 'elevation' string (that's a display label), so pointing lat/lon at
+    # the right spot is what actually shifts the forecast; elevation is annotation.
+    'bend_alpine': {
+        'name': 'Bend – Alpine (Chimichanga / Metolius tops)',
+        'lat': 43.9770,
+        'lon': -121.6960,
+        'elevation': '~7,000 ft',
+        'description': "High point of the Dutchman Flat days — The Whole Chimichanga tops out ~6,970 ft. Cams: Top of Outback + Top of Sunrise",
+        'forecast_link': 'https://www.wunderground.com/forecast/us/or/bend?cm_ven=localwx_10day',
+        'snotel': {'triplet': '545:OR:SNTL', 'name': 'Irish Taylor', 'elevation': '5,540 ft'},
+        'webcams': _WEBCAM_URLS.get('Bend Alpine', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Bend Alpine', {}).get('live_webcams', [])
+    },
+    'bend_mid': {
+        'name': 'Bend – Mid (Wanoga / Swampy)',
+        'lat': 43.9750,
+        'lon': -121.5700,
+        'elevation': '~5,700 ft',
+        'description': "The Cascade Lakes trail zone (Wanoga, Swampy, South Fork) — where most of the riding happens. Cam: Sunrise Base (~6,300 ft, nearest view)",
+        'forecast_link': 'https://www.wunderground.com/forecast/us/or/bend?cm_ven=localwx_10day',
+        'snotel': {'triplet': '545:OR:SNTL', 'name': 'Irish Taylor', 'elevation': '5,540 ft'},
+        'webcams': _WEBCAM_URLS.get('Bend Mid', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Bend Mid', {}).get('live_webcams', [])
+    },
+    'bend_town': {
+        'name': 'Bend – In Town (Phil\'s Trails)',
+        'lat': 44.0430,
+        'lon': -121.3730,
+        'elevation': '~3,900 ft',
+        'description': "Bend proper, Phil's Trail network, the Century Drive lodging and where every descent finishes. Cam: US97 at Lava Butte (~4,514 ft)",
+        'forecast_link': 'https://www.wunderground.com/forecast/us/or/bend?cm_ven=localwx_10day',
+        'webcams': _WEBCAM_URLS.get('Bend Town', {}).get('webcams', []),
+        'live_webcams': _WEBCAM_URLS.get('Bend Town', {}).get('live_webcams', [])
+    },
     'laguna': {
         'name': 'Mount Laguna',
         'lat': 32.8737605,
@@ -201,45 +240,6 @@ LOCATIONS = {
         'live_webcams': _WEBCAM_URLS.get('Jamul', {}).get('live_webcams', [])
     },
 
-    # Bend / Mt. Bachelor — three tiles matching the ELEVATION BANDS the rides
-    # span (alpine ~7,000 ft high points → mid ~5,700 ft trail zone → in-town
-    # ~4,000 ft descent finishes), each with the cam(s) available at that band.
-    # Nearest real-time SNOTEL to the high country is Irish Taylor (545:OR:SNTL,
-    # 5,540 ft). NOTE: OpenWeatherMap forecasts by lat/lon grid cell — it does NOT
-    # ingest the 'elevation' string (that's a display label), so pointing lat/lon at
-    # the right spot is what actually shifts the forecast; elevation is annotation.
-    'bend_alpine': {
-        'name': 'Bend – Alpine (Chimichanga / Metolius tops)',
-        'lat': 43.9770,
-        'lon': -121.6960,
-        'elevation': '~7,000 ft',
-        'description': "High point of the Dutchman Flat days — The Whole Chimichanga tops out ~6,970 ft. Cams: Top of Outback + Top of Sunrise",
-        'forecast_link': 'https://www.wunderground.com/forecast/us/or/bend?cm_ven=localwx_10day',
-        'snotel': {'triplet': '545:OR:SNTL', 'name': 'Irish Taylor', 'elevation': '5,540 ft'},
-        'webcams': _WEBCAM_URLS.get('Bend Alpine', {}).get('webcams', []),
-        'live_webcams': _WEBCAM_URLS.get('Bend Alpine', {}).get('live_webcams', [])
-    },
-    'bend_mid': {
-        'name': 'Bend – Mid (Wanoga / Swampy)',
-        'lat': 43.9750,
-        'lon': -121.5700,
-        'elevation': '~5,700 ft',
-        'description': "The Cascade Lakes trail zone (Wanoga, Swampy, South Fork) — where most of the riding happens. Cam: Sunrise Base (~6,300 ft, nearest view)",
-        'forecast_link': 'https://www.wunderground.com/forecast/us/or/bend?cm_ven=localwx_10day',
-        'snotel': {'triplet': '545:OR:SNTL', 'name': 'Irish Taylor', 'elevation': '5,540 ft'},
-        'webcams': _WEBCAM_URLS.get('Bend Mid', {}).get('webcams', []),
-        'live_webcams': _WEBCAM_URLS.get('Bend Mid', {}).get('live_webcams', [])
-    },
-    'bend_town': {
-        'name': 'Bend – In Town (Phil\'s Trails)',
-        'lat': 44.0430,
-        'lon': -121.3730,
-        'elevation': '~3,900 ft',
-        'description': "Bend proper, Phil's Trail network, the Century Drive lodging and where every descent finishes. Cam: US97 at Lava Butte (~4,514 ft)",
-        'forecast_link': 'https://www.wunderground.com/forecast/us/or/bend?cm_ven=localwx_10day',
-        'webcams': _WEBCAM_URLS.get('Bend Town', {}).get('webcams', []),
-        'live_webcams': _WEBCAM_URLS.get('Bend Town', {}).get('live_webcams', [])
-    },
     'parkcity': {
         'name': 'Park City, UT',
         'lat': 40.6510,
@@ -267,7 +267,7 @@ LOCATIONS = {
 
 
 # Default location when accessing root URL
-DEFAULT_LOCATION = 'laguna'
+DEFAULT_LOCATION = 'bend_alpine'
 
 def get_location(location_key):
     """
