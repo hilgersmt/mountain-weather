@@ -5,11 +5,12 @@ A responsive weather monitoring application for mountain locations with
 user-selectable themes and clean architecture.
 """
 
+import json
 import os
 from bottle import default_app, route, template, static_file, abort, TEMPLATE_PATH
 from dotenv import load_dotenv
 
-from config import LOCATIONS, DEFAULT_LOCATION, get_location, get_all_locations
+from config import LOCATIONS, DEFAULT_LOCATION, NEAREST_ALIASES, get_location, get_all_locations
 from weather_service import WeatherService
 
 # Load environment variables from .env file
@@ -23,6 +24,17 @@ TEMPLATE_PATH.insert(0, template_dir)
 # Initialize weather service with API key
 API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')  # set in .env (never commit the key)
 weather_service = WeatherService(API_KEY)
+
+# Data for the client-side "Start page" preference (static/js/start-page.js):
+# the site default, every location's coordinates for the nearest-to-me option,
+# and the band aliases. Embedded in the page as JSON; '</' is escaped so the
+# payload can't terminate its <script> element.
+START_PAGE_JSON = json.dumps({
+    'default': DEFAULT_LOCATION,
+    'aliases': NEAREST_ALIASES,
+    'locations': [{'key': k, 'name': v['name'], 'lat': v['lat'], 'lon': v['lon']}
+                  for k, v in LOCATIONS.items()],
+}).replace('</', '<\\/')
 
 
 # Cache-busting token for static CSS/JS: newest file mtime, as an int string.
@@ -197,7 +209,9 @@ def weather_view(location_key=None):
         'forecast': weather_data['forecast'] if weather_data else [],
         'snotel': snotel,
         'has_error': has_error,
-        'asset_ver': ASSET_VER
+        'asset_ver': ASSET_VER,
+        'start_page_json': START_PAGE_JSON,
+        'default_location': DEFAULT_LOCATION
     }
 
     return template('weather', **context)

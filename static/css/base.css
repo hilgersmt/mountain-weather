@@ -91,11 +91,48 @@ header {
 /* Top bar (location selector) */
 .top-bar {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    gap: 0.75rem;
     padding: 1rem;
     max-width: 1400px;
     margin: 0 auto;
+}
+
+/* Start-page preference (static/js/start-page.js) */
+/* "Location:" and "Start page:" — a visible label beside each top-bar select */
+.location-selector,
+.start-page {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* Long location names: let the select shrink to fit the screen instead of
+   overflowing it (the browser truncates the shown option). */
+#location-select,
+#start-select {
+    min-width: 0;
+    max-width: 100%;
+    flex: 0 1 auto;
+}
+
+.top-bar-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.start-note {
+    max-width: 1400px;
+    margin: -0.5rem auto 0.5rem;
+    padding: 0 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
 }
 
 /* Footer controls row (theme selector) */
@@ -109,7 +146,8 @@ header {
 }
 
 #theme-select,
-#location-select {
+#location-select,
+#start-select {
     padding: 0.5rem 1rem;
     border: 2px solid var(--accent);
     border-radius: 6px;
@@ -167,6 +205,12 @@ main {
 .location-meta {
     color: var(--text-secondary);
     font-size: 1rem;
+}
+
+.location-distance {
+    margin-top: 0.4rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
 }
 
 /* Section Titles */
@@ -310,16 +354,27 @@ article {
     margin-top: 1rem;
 }
 
+/* Styled as an outlined button so it reads as tappable (it opens an external site) */
 .forecast-link a {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border: 2px solid var(--accent);
+    border-radius: 6px;
     color: var(--accent);
     text-decoration: none;
     font-weight: 600;
-    font-size: 1.1rem;
-    transition: color 0.2s ease;
+    font-size: 1.05rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.forecast-link a:hover {
-    text-decoration: underline;
+.forecast-link .nowrap {
+    white-space: nowrap;
+}
+
+.forecast-link a:hover,
+.forecast-link a:focus-visible {
+    background-color: var(--accent);
+    color: var(--bg-primary);
 }
 
 /* Webcam Grid */

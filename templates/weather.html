@@ -6,6 +6,23 @@
     <meta http-equiv="refresh" content="125">
     <title>{{location['name']}} Weather Conditions</title>
 
+    <!-- Start-page preference (see static/js/start-page.js). The "always open"
+         mode redirects here, before first paint, so the default page never flashes. -->
+    <script id="start-page-data" type="application/json">{{!start_page_json}}</script>
+    <script>
+        (function () {
+            try {
+                if (location.pathname !== '/') return;
+                var p = JSON.parse(localStorage.getItem('mountain-weather-start') || 'null');
+                if (!p || p.mode !== 'fixed' || p.key === '{{location_key}}') return;
+                var cfg = JSON.parse(document.getElementById('start-page-data').textContent);
+                if (cfg.locations.some(function (l) { return l.key === p.key; })) {
+                    location.replace('/' + encodeURIComponent(p.key));
+                }
+            } catch (e) { /* no storage / bad value: stay on the site default */ }
+        })();
+    </script>
+
     <!-- Favicons — theme-aware (dark-first site) -->
     <link rel="icon" type="image/png" href="/static/images/evil3-dark.png" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/png" href="/static/images/evil.png" media="(prefers-color-scheme: light)">
@@ -17,19 +34,34 @@
     <link rel="stylesheet" href="/static/css/themes.css?v={{asset_ver}}">
     <link rel="stylesheet" href="/static/css/responsive.css?v={{asset_ver}}">
 </head>
-<body>
+<body data-location="{{location_key}}">
     <header>
         <div class="top-bar">
             <div class="location-selector">
-                <label for="location-select" class="visually-hidden">Choose location:</label>
-                <select id="location-select" aria-label="Location selector"
+                <label for="location-select" class="top-bar-label">Location:</label>
+                <select id="location-select"
                         onchange="if(this.value){window.location.href=this.value;}">
                     % for key, loc in all_locations.items():
                         <option value="/{{key}}" {{'selected' if key == location_key else ''}}>{{loc['name']}}</option>
                     % end
                 </select>
             </div>
+            <div class="start-page">
+                <label for="start-select" class="top-bar-label">Start page:</label>
+                <select id="start-select">
+                    <option value="nearest">Nearest location</option>
+                    <option value="default">Site default: {{all_locations[default_location]['name']}}</option>
+                    <optgroup label="Always open">
+                        % for key, loc in all_locations.items():
+                            % if key != default_location:
+                                <option value="{{key}}">{{loc['name']}}</option>
+                            % end
+                        % end
+                    </optgroup>
+                </select>
+            </div>
         </div>
+        <p id="start-note" class="start-note" role="status" hidden></p>
     </header>
 
     <main role="main">
@@ -45,6 +77,8 @@
                 {{location.get('description', '')}} | Elevation: {{location.get('elevation', 'N/A')}}
                 | <a href="/map?loc={{location_key}}" class="map-button" title="Show this location and its webcams on the map">🗺 View on map</a>
             </p>
+            <!-- Filled by start-page.js only if location access is already allowed -->
+            <p id="location-distance" class="location-distance" hidden></p>
         </section>
 
         <article class="current-weather" aria-label="Current weather conditions">
@@ -116,7 +150,7 @@
             </div>
             <div class="forecast-link">
                 <a href="{{location['forecast_link']}}" target="_blank" rel="noopener noreferrer">
-                    Detailed forecast for {{location['name']}}
+                    Detailed forecast on <span class="nowrap">Weather Underground <span aria-hidden="true">↗</span></span><span class="visually-hidden"> (opens in a new tab)</span>
                 </a>
             </div>
         </article>
@@ -178,5 +212,6 @@
 
     <!-- Theme Switcher Script -->
     <script src="/static/js/theme-switcher.js?v={{asset_ver}}"></script>
+    <script src="/static/js/start-page.js?v={{asset_ver}}"></script>
 </body>
 </html>

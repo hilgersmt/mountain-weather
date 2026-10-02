@@ -269,6 +269,14 @@ LOCATIONS = {
 # Default location when accessing root URL
 DEFAULT_LOCATION = 'bend_alpine'
 
+# "Nearest to me" start-page option: straight-line distance can't tell elevation
+# bands apart (in Bend you'd always match the in-town tile), so a nearest match on
+# any key here opens the mapped location instead.
+NEAREST_ALIASES = {
+    'bend_mid': 'bend_alpine',
+    'bend_town': 'bend_alpine',
+}
+
 def get_location(location_key):
     """
     Get location configuration by key.
