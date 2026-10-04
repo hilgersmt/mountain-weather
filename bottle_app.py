@@ -169,6 +169,32 @@ def site_map():
     return template('map', locations_json=_json.dumps(locs), cameras_json=_json.dumps(MAP_CAMERAS))
 
 
+@route('/privacy')
+def privacy():
+    """Privacy policy. Also serves as the policy URL for the owner's personal
+    Google OAuth app (home-nest: Nest thermostat -> Homebridge), which Google
+    requires before an OAuth app can leave Testing mode."""
+    return """<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy - chickenbaby.org</title>
+<style>body{font:16px/1.55 -apple-system,system-ui,sans-serif;max-width:40rem;margin:2rem auto;padding:0 1rem;color:#222}
+@media (prefers-color-scheme:dark){body{background:#111;color:#ddd}a{color:#8ab4f8}}</style></head><body>
+<h1>Privacy</h1>
+<p><b>This website.</b> chickenbaby.org shows mountain weather and public webcams. It has no accounts and
+sets no tracking cookies. If you choose "nearest location", your device's position is used in your browser
+only and is not sent to or stored by this site. Standard web-server logs (IP address, page requested) are kept
+by the hosting provider for operations only.</p>
+<p><b>home-nest (personal Google sign-in app).</b> "home-nest" is a private, single-household home-automation
+integration operated by the site owner for their own home. It uses Google's Smart Device Management API to read
+and adjust the owner's own Nest thermostat from the owner's home server. It is not offered to the public. Data
+received from Google (thermostat temperature, setpoints, mode, humidity) is used only to display and control that
+thermostat, stays on the owner's home server, and is never sold, shared, or used for advertising. Access can be
+revoked at any time at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+<p>Contact: hilgersmt@gmail.com</p>
+<p><a href="/">&larr; Back to weather</a></p>
+</body></html>"""
+
+
 @route('/')
 @route('/<location_key>')
 def weather_view(location_key=None):
