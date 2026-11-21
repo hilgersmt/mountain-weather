@@ -486,6 +486,6 @@ a:focus {
 }
 .served-by-icon {
     width: auto;
-    height: 32px;
-    vertical-align: -10px;
+    height: 40px;
+    vertical-align: -14px;
 }

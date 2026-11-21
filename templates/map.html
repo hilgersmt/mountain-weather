@@ -168,7 +168,7 @@
         const legend = L.control({ position: 'bottomleft' });
         legend.onAdd = () => {
             const div = L.DomUtil.create('div', 'legend');
-            div.innerHTML = '⛅ weather point (live temp)<br>📷 webcam (click for live view)<br>Layers: weather, radar, rides, fires ↗<br><span class="served-by">served from {{served_by}}{{!' <img src=\"/static/images/boxy-1.png\" alt=\"\" class=\"served-by-icon\" width=\"21\" height=\"32\">' if served_by == 'boxy' else ''}}</span>';
+            div.innerHTML = '⛅ weather point (live temp)<br>📷 webcam (click for live view)<br>Layers: weather, radar, rides, fires ↗<br><span class="served-by">served from {{served_by}}{{!' <img src=\"/static/images/boxy-1-v2.png\" alt=\"\" class=\"served-by-icon\" width=\"26\" height=\"40\">' if served_by == 'boxy' else ''}}</span>';
             return div;
         };
         legend.addTo(map);
