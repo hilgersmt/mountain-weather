@@ -481,11 +481,11 @@ a:focus {
 
 /* which machine served the page (boxy / PythonAnywhere) */
 .served-by {
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     opacity: 0.6;
 }
 .served-by-icon {
-    width: 24px;
-    height: 24px;
-    vertical-align: -7px;
+    width: 32px;
+    height: 32px;
+    vertical-align: -10px;
 }
