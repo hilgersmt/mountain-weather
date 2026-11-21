@@ -484,3 +484,8 @@ a:focus {
     font-size: 0.75rem;
     opacity: 0.6;
 }
+.served-by-icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: -3px;
+}
