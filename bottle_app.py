@@ -7,7 +7,8 @@ user-selectable themes and clean architecture.
 
 import json
 import os
-from bottle import default_app, route, hook, request, redirect, template, static_file, abort, TEMPLATE_PATH
+from bottle import default_app, route, hook, request, response, redirect, template, static_file, abort, TEMPLATE_PATH, BaseTemplate
+import socket
 from dotenv import load_dotenv
 
 from config import (LOCATIONS, DEFAULT_LOCATION, NEAREST_ALIASES, CANONICAL_ORIGIN,
@@ -54,6 +55,18 @@ def _asset_version():
     return str(latest)
 
 ASSET_VER = _asset_version()
+
+
+# Which machine served this page: shown in the footer and sent as an X-Served-By header.
+# PythonAnywhere sets PYTHONANYWHERE_DOMAIN; elsewhere use the short host name (e.g. "boxy").
+SERVED_BY = (os.getenv('SERVED_BY')
+             or ('PythonAnywhere' if os.getenv('PYTHONANYWHERE_DOMAIN') else socket.gethostname().split('.')[0]))
+BaseTemplate.defaults['served_by'] = SERVED_BY
+
+
+@hook('after_request')
+def add_served_by_header():
+    response.set_header('X-Served-By', SERVED_BY)
 
 
 @hook('before_request')
