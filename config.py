@@ -267,10 +267,10 @@ LOCATIONS = {
 
 
 # Canonical site address. Requests arriving on any host listed here get a
-# permanent redirect to the same path on CANONICAL_ORIGIN (both hosts are
-# PythonAnywhere web apps serving this same code).
+# permanent redirect to the same path on CANONICAL_ORIGIN (served from boxy via a
+# Cloudflare Tunnel since 2026-11-21; PythonAnywhere kept as fallback).
 CANONICAL_ORIGIN = 'https://www.chickenbaby.org'
-REDIRECT_HOSTS = {'hilgersmt.pythonanywhere.com'}
+REDIRECT_HOSTS = {'hilgersmt.pythonanywhere.com', 'chickenbaby.org'}
 
 # Default location when accessing root URL
 DEFAULT_LOCATION = 'bend_alpine'
