@@ -485,7 +485,7 @@ a:focus {
     opacity: 0.6;
 }
 .served-by-icon {
-    width: 32px;
+    width: auto;
     height: 32px;
     vertical-align: -10px;
 }
